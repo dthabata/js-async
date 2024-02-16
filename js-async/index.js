@@ -1,37 +1,53 @@
-const loginUser = (email, password, onSuccess, onError) => {
-    setTimeout(() => {
-        const error = false;
+const loginUser = (email, password) => {
+    return new Promise((resolve, reject) => {
+    const error = false;
 
-        if (error) {
-            return onError(new Error("Erro no login"))
-        }
+    if (error) {
+        reject(new Error("Erro no login"));
+    }
 
-        console.log("Usuário logado!");
-        onSuccess({ email });
-    }, 1500);
-};
-
-const getUserVideos = (email, callback) => {
-    setTimeout(() => {
-        callback(["video1", "video2", "video3"]);
-    }, 2000);
-};
-
-const getVideoDetails = (video, callback) => {
-    setTimeout(() => {
-        callback({ title: "Título do vídeo" });
-    }, 2500);
-};
-
-const user = loginUser("thabata@gmail.com", "123456", (user) => {
-    getUserVideos(user.email, (videos) => {
-        console.log({ videos });
-        getVideoDetails(videos[0], (videoDetails) => {
-            console.log({ videoDetails });
-        })
+    console.log("Usuário logado");
+    resolve({ email });
     });
-}, (error) =>  {
-    console.log({ error });
+};
+
+const getUserVideos = (email) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("getUserVideos");
+            resolve(["video1", "video2", "video3"]);
+        }, 2000);
+    });
+};
+
+const getVideoDetails = (video) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("getVideoDetails");
+            resolve({ title: "Título do vídeo" });
+        }, 2500);
+    });
+};
+
+loginUser("thabata@gmail.com", "123456")
+    .then((user) => getUserVideos(user.email))
+    .then((videos) => getVideoDetails(videos[0]))
+    .then((videoDetails) => console.log({ videoDetails }))
+    .catch((error) => console.log({ error }));
+
+// Promise.all
+const yt = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve("Vídeos do Youtube");
+    }, 2000);
 });
 
-// console.log({ user });
+const fb = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve("Posts do Facebook");
+    }, 5000);
+});
+
+Promise.all([yt, fb]).then((result) => {
+    console.log({ result });
+});
