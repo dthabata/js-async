@@ -9,12 +9,27 @@ const loginUser = (email, password, onSuccess, onError) => {
         console.log("Usuário logado!");
         onSuccess({ email });
     }, 1500);
+};
 
-    console.log("Depois do setTimeout");
+const getUserVideos = (email, callback) => {
+    setTimeout(() => {
+        callback(["video1", "video2", "video3"]);
+    }, 2000);
+};
+
+const getVideoDetails = (video, callback) => {
+    setTimeout(() => {
+        callback({ title: "Título do vídeo" });
+    }, 2500);
 };
 
 const user = loginUser("thabata@gmail.com", "123456", (user) => {
-    console.log({ user });
+    getUserVideos(user.email, (videos) => {
+        console.log({ videos });
+        getVideoDetails(videos[0], (videoDetails) => {
+            console.log({ videoDetails });
+        })
+    });
 }, (error) =>  {
     console.log({ error });
 });
